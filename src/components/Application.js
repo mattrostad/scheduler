@@ -1,12 +1,57 @@
 import React, { useState, useEffect } from "react";
 import Appointment from "components/Appointment";
-import { getAppointmentsForDay, getInterview  } from "helpers/selectors";
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay,
+} from "helpers/selectors";
 import axios from "axios";
 import "components/Application.scss";
 
 import DayList from "components/DayList";
 
 export default function Application(props) {
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+    return axios
+      .put(`http://localhost:8001/api/appointments/${id}`, { interview })
+      .then(() => {
+        setState({
+          ...state,
+          appointments,
+        });
+      });
+  }
+
+  function cancelInterview(id){
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    const url =`http://localhost:8001/api/appointments/${id}`;
+
+    let req={
+      url,
+      method: 'DELETE',
+    }
+    return axios(req).then(response =>{
+      console.log("response from delete axios===>",response);
+      setState({...state, appointments});
+    });
+
+  }
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -14,8 +59,9 @@ export default function Application(props) {
     interviewers: {},
   });
 
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
   
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
 
   const setDay = (day) => setState({ ...state, day });
 
@@ -36,12 +82,9 @@ export default function Application(props) {
       .catch((error) => {
         console.error("Error fetching days:", error);
       });
-      // eslint-disable-next-line
-  }, []);
+    // eslint-disable-next-line
+  }, []); 
 
-
-
-  
   return (
     <main className="layout">
       <section className="sidebar">
@@ -62,13 +105,17 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {dailyAppointments.map((appointment) => {
-  const interview = getInterview(state, appointment.interview);
+          const interview = getInterview(state, appointment.interview);
           return (
             <Appointment
               key={appointment.id}
               id={appointment.id}
               time={appointment.time}
               interview={interview}
+              interviewers={interviewers}
+              bookInterview={bookInterview}
+              cancelInterview={cancelInterview}
+
             />
           );
         })}
