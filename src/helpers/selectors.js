@@ -33,7 +33,6 @@ export function getInterview(state, interview) {
 export function getInterviewersForDay(state, day) {
   // Find the object for the given day in the 'days' array
   const selectedDay = state.days.find((d) => d.name === day);
-  console.log(selectedDay);
   if (!selectedDay) {
     // If the day is not found, return an empty array
     return [];

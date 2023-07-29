@@ -10,6 +10,11 @@ export default function InterviewerList(props) {
   setInterviewer:function; accepts id of interviewer
   */ 
 
+  InterviewerList.propTypes = {
+    interviewers: PropTypes.array.isRequired
+  };
+  
+
  const interviewers = props.interviewers.map((interviewer) => {
   return (
     <InterviewerListItem

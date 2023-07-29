@@ -43,7 +43,6 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
-  console.log(props);
   return (
     <article className="appointment" data-testid="appointment">
       <Header time={props.time} />

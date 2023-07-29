@@ -11,17 +11,12 @@ import "components/Application.scss";
 import DayList from "components/DayList";
 
 export default function Application(props) {
-  const {
-    state,
-    setDay,
-    bookInterview,
-    cancelInterview
-  } = useApplicationData();
-  
+  const { state, setDay, bookInterview, cancelInterview } =
+    useApplicationData();
+
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   const interviewers = getInterviewersForDay(state, state.day);
 
-  
   return (
     <main className="layout">
       <section className="sidebar">
@@ -52,10 +47,9 @@ export default function Application(props) {
               interviewers={interviewers}
               bookInterview={bookInterview}
               cancelInterview={cancelInterview}
-
             />
           );
-        })}
+        })}<Appointment key="last" time="5pm"/>
       </section>
     </main>
   );

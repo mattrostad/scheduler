@@ -28,13 +28,28 @@ export default function useApplicationData() {
         console.error("Error fetching days:", error);
       });
     // eslint-disable-next-line
-  }, []); 
+  }, []);
+
+  const updateSpots = function (dayName, days, appointments) {
+    const day = days.find((d) => d.name === dayName);
+
+    const spots = day.appointments.filter(
+      (id) => appointments[id].interview === null
+    ).length;
+
+    const newDay = { ...day, spots };
+    const newDays = days.map((d) => (d.name === dayName ? newDay : d));
+
+    return newDays;
+  };
 
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
+
       interview: { ...interview },
     };
+    console.log(appointment);
     const appointments = {
       ...state.appointments,
       [id]: appointment,
@@ -42,38 +57,46 @@ export default function useApplicationData() {
     return axios
       .put(`http://localhost:8001/api/appointments/${id}`, { interview })
       .then(() => {
+        const days = updateSpots(state.day, state.days, appointments);
+
         setState({
           ...state,
           appointments,
+          days,
         });
       });
   }
-  
 
-  function cancelInterview(id){
+  function cancelInterview(id) {
     const appointment = {
       ...state.appointments[id],
-      interview: null
+      interview: null,
     };
     const appointments = {
       ...state.appointments,
-      [id]: appointment
+      [id]: appointment,
     };
 
-    const url =`http://localhost:8001/api/appointments/${id}`;
+    const url = `http://localhost:8001/api/appointments/${id}`;
 
-    let req={
+    let req = {
       url,
-      method: 'DELETE',
-    }
-    return axios(req).then(response =>{
-      console.log("response from delete axios===>",response);
-      setState({...state, appointments});
-    });
+      method: "DELETE",
+    };
+    return axios(req).then((response) => {
+      const days = updateSpots(state.day, state.days, appointments);
 
+      setState({
+        ...state,
+        appointments,
+        days,
+      });
+    });
   }
   return {
-    state, setDay, bookInterview, cancelInterview
-  }
-
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview,
+  };
 }
