@@ -49,14 +49,13 @@ export default function useApplicationData() {
 
       interview: { ...interview },
     };
-    console.log(appointment);
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
     console.log("testing", axios.put)
     return axios
-      .put(`http://localhost:8001/api/appointments/${id}`, { interview })
+      .put(`/api/appointments/${id}`, { interview })
       .then(() => {
         const days = updateSpots(state.day, state.days, appointments);
 
@@ -78,13 +77,15 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
-    const url = `http://localhost:8001/api/appointments/${id}`;
+    const url = `/api/appointments/${id}`;
 
     let req = {
       url,
       method: "DELETE",
     };
-    return axios(req).then((response) => {
+    return axios
+    .delete(url)
+    .then(() => {
       const days = updateSpots(state.day, state.days, appointments);
 
       setState({
