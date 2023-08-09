@@ -21,3 +21,11 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## Screenshots of Project
+
+![Webpage of running Interview Scheduler](https://github.com/mattrostad/scheduler/blob/master/docs/Interview-Scheduler.png?raw=true)
+
+![Create an appointment with missing Interviewer information](https://github.com/mattrostad/scheduler/blob/master/docs/Create-Appointment-missing-interviewer.png?raw=true)
+
+![Create an appointment with missing Student Information](https://github.com/mattrostad/scheduler/blob/master/docs/Create-Appointment-missing-student-name.png?raw=true)
